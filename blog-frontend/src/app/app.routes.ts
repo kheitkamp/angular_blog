@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { TutorialContentComponent } from './tutorial-content/tutorial-content.component';
+import { AngularTutorial } from './tutorial-content/angular-tutorial.component';
 export const routes: Routes = [
 
-    { path: 'tutorial', component: TutorialContentComponent },
+    { path: 'tutorial', component: AngularTutorial },
 
 ];
