@@ -1,0 +1,118 @@
+<h3>Creating an Angular Frontend</h3>
+
+<p>
+    In this tutorial, we will create an Angular frontend for our blog application.
+</p>
+
+<p>
+    We will create a new Angular project and add the necessary components to display the blog posts.
+</p>
+
+<p>
+    Let's get started!
+</p>
+
+<p>
+        First, make sure you have the Angular CLI installed. If you don't have it installed, you can install it by running the following command:
+</p>
+
+<pre>
+    <code>
+        npm install -g &#64;angular/cli
+    </code>
+</pre>
+
+<p>
+    Next, create a new Angular project by running the following command:
+</p>
+
+<pre>
+    <code>
+        ng new blog-frontend
+    </code>
+</pre>
+
+<p>
+    This will create a new Angular project with the name "blog-frontend".
+</p>
+
+<p>
+    Change into the project directory by running the following command:
+</p>
+
+<pre>
+    <code>
+        cd blog-frontend
+    </code>
+</pre>
+
+<p>
+    Next, create a new component to display the blog posts by running the following command:
+</p>
+
+<pre>
+    <code>
+        ng generate component blog-posts
+    </code>
+</pre>
+
+<p>
+    This will create a new component with the name "blog-posts".
+</p>
+
+<p>
+    Open the newly created component file "blog-posts.component.ts" and add the following code:
+</p>
+<pre>
+<code>
+        import &#123; Component, OnInit &#125; from '&#64;angular/core';
+
+        &#64;Component(&#123;
+            selector: 'app-blog-posts',
+            standalone: true,
+            templateUrl: './blog-posts.component.html',
+            styleUrls: ['./blog-posts.component.css']
+        &#125;)
+        export class BlogPostsComponent implements OnInit &#123;
+
+            constructor() &#123; &#125;
+
+            ngOnInit() &#123; &#125;
+
+        &#125;
+    </code>
+</pre>
+
+<p>
+    Next, open the template file "blog-posts.component.html" and add the following code:
+</p>
+<pre>
+    <code>
+        &lt;h2&gt;Blog Posts&lt;/h2&gt;
+    </code>
+</pre>
+<p>
+        To make the blog posts component usable, it previously was needed to add it to the app's main module.
+        Since Angluar 14, this is no longer necessary. The component is now standalone and can be used without being added to the main module.
+</p>
+
+<p>
+    Finally, open the "app.component.html" file and add the following code to display the blog posts component:
+</p>
+<pre>
+    <code>
+        &lt;app-blog-posts&gt;&lt;/app-blog-posts&gt;
+    </code>
+</pre>
+<p>
+    Now you can run the Angular application by running the following command:
+</p>
+<pre>
+        <code>
+        ng serve
+        </code>
+</pre>
+
+<p>
+    This will start the Angular development server, and you can access the application by navigating to "http://localhost:4200/" in your browser.
+</p>
