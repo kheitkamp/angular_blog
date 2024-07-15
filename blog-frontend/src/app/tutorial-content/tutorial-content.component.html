@@ -69,6 +69,7 @@
 
         &#64;Component(&#123;
             selector: 'app-blog-posts',
+            standalone: true,
             templateUrl: './blog-posts.component.html',
             styleUrls: ['./blog-posts.component.css']
         &#125;)
@@ -91,33 +92,10 @@
     </code>
 </pre>
 <p>
-        To make the blog posts component usable, we need to add it to the app's main module.
+        To make the blog posts component usable, it previously was needed to add it to the app's main module.
+        Since Angluar 14, this is no longer necessary. The component is now standalone and can be used without being added to the main module.
 </p>
 
-<p>
-        Within the src/app directory, create the app.module.ts file and add the following code:
-</p>
-<pre>
-        <code>
-                import &#123; NgModule &#125; from '&#64;angular/core';
-                import &#123; BrowserModule &#125; from '&#64;angular/platform-browser';
-                import &#123; AppComponent &#125; from './app.component';
-                import &#123; BlogPostsComponent &#125; from './blog-posts/blog-posts.component';
-
-                &#64;NgModule(&#123;
-                        declarations: [
-                                AppComponent,
-                                BlogPostsComponent
-                        ],
-                        imports: [
-                                BrowserModule
-                        ],
-                        providers: [],
-                        bootstrap: [AppComponent]
-                &#125;)
-                export class AppModule {{ '{ }' }}
-        </code>
-    </pre>
 <p>
     Finally, open the "app.component.html" file and add the following code to display the blog posts component:
 </p>
