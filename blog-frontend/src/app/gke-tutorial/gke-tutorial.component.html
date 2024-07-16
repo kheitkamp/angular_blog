@@ -54,7 +54,8 @@
 </p>
 
 <p>
-    Make sure, that the <i>Public cluster</i> option is selected and leave the default settings for the <i>Networking</i> and click <i>NEXT: ADVANCED SETTINGS</i>.
+    Make sure, that the <i>Public cluster</i> option is selected and leave the default settings for the <i>Networking</i> and 
+    click <i>NEXT: ADVANCED SETTINGS</i>.
 </p>
 
 <p>
@@ -117,7 +118,7 @@
 </p>
 
 <p>
-    Enter <i>Kubernetes Engine API</i></p> in the search field. Select the <i>Kubernetes Engine API</i> and click <i>Enable</i>. Do the same with the
+    Enter <i>Kubernetes Engine API</i> in the search field. Select the <i>Kubernetes Engine API</i> and click <i>Enable</i>. Do the same with the
     Artifact Registry API.
 </p>
 
@@ -139,12 +140,12 @@
 
 <pre>
     <code>
-        git clone https://github.com/[GITHUB_USERNAME]/[REPOSITORY_NAME].git
+        git clone https://github.com/kheitkamp/angular_blog.git
     </code>
 </pre>
 
 <p>
-    Replace <i>[GITHUB_USERNAME]</i> with your GitHub username and <i>[REPOSITORY_NAME]</i> with the name of the repository. Also take into
+    You can replace <i>kheitkamp</i> with your GitHub username and <i>angular_blog</i> with the name of the repository you would like to deploy. Also take into
     account, that the repository must be public.
 </p>
 
@@ -154,12 +155,34 @@
 
 <pre>
     <code>
-        cd [REPOSITORY_NAME]
+        cd angular_blog/blog_frontend
     </code>
 </pre>
 
 <p>
-    Build the Docker image from the Angular application:
+    Before creating the Docker image, we need to actually build the Angular application. Since the Angular CLI isn't installed in the Google Cloud Shell,
+    we need to install the node modules first. Run the following command to install the node modules:
+</p>
+
+<pre>
+    <code>
+        npm install
+    </code>
+</pre>
+
+<p>
+    After the node modules have been installed, we can build the Angular application. Run the following command to build the Angular application:
+</p>
+
+<pre>
+    <code>
+        npm run build
+    </code>
+</pre>
+
+
+<p>
+    We can now build the Docker image from the Angular application:
 </p>
 
 <p>
@@ -250,19 +273,9 @@
 
 <pre>
     <code>
-        docker build -t gcr.io/[PROJECT_ID]/blog-frontend:v1 .
+        docker build -t ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1 .
     </code>
 </pre>
-
-<p>
-    Replace <i>[PROJECT_ID]</i> with your Google Cloud Platform project ID. This command will build the Docker image with the tag 
-    <i>gcr.io/[PROJECT_ID]/blog-frontend:v1</i>.
-</p>
-
-<p>
-    You can find the project ID in the Google Cloud Console by clicking on the top left on the project ID's name. A popup will appear with the available
-    Projects in your account and their project IDs.
-</p>
 
 <p>
     After the Docker image has been created, we need to push the image to Google Container Registry (GCR). Run the following command to push the 
@@ -274,3 +287,4 @@
         docker push gcr.io/[PROJECT_ID]/blog-frontend:v1
     </code>
 </pre>
+
