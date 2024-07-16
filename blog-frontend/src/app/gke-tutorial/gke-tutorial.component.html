@@ -140,12 +140,12 @@
 
 <pre>
     <code>
-        git clone https://github.com/[GITHUB_USERNAME]/[REPOSITORY_NAME].git
+        git clone https://github.com/kheitkamp/angular_blog.git
     </code>
 </pre>
 
 <p>
-    Replace <i>[GITHUB_USERNAME]</i> with your GitHub username and <i>[REPOSITORY_NAME]</i> with the name of the repository. Also take into
+    You can replace <i>kheitkamp</i> with your GitHub username and <i>angular_blog</i> with the name of the repository you would like to deploy. Also take into
     account, that the repository must be public.
 </p>
 
@@ -155,12 +155,34 @@
 
 <pre>
     <code>
-        cd [REPOSITORY_NAME]
+        cd angular_blog/blog_frontend
     </code>
 </pre>
 
 <p>
-    Build the Docker image from the Angular application:
+    Before creating the Docker image, we need to actually build the Angular application. Since the Angular CLI isn't installed in the Google Cloud Shell,
+    we need to install the node modules first. Run the following command to install the node modules:
+</p>
+
+<pre>
+    <code>
+        npm install
+    </code>
+</pre>
+
+<p>
+    After the node modules have been installed, we can build the Angular application. Run the following command to build the Angular application:
+</p>
+
+<pre>
+    <code>
+        npm run build
+    </code>
+</pre>
+
+
+<p>
+    We can now build the Docker image from the Angular application:
 </p>
 
 <p>
@@ -251,7 +273,7 @@
 
 <pre>
     <code>
-        docker build -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1 .
+        docker build -t ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1 .
     </code>
 </pre>
 
