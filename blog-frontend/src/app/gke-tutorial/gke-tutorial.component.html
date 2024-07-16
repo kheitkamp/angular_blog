@@ -1,0 +1,276 @@
+<h2>GKE Tutorial</h2>
+
+<p>
+    In this tutorial, we will deploy our blog application to Google Kubernetes Engine (GKE).
+</p>
+
+<p>
+    We will create a Kubernetes cluster on GKE, build and push our Docker image to Google Container Registry (GCR), 
+    and deploy our application to the cluster.
+</p>
+
+<p>
+    Let's get started!
+</p>
+
+<h3>Creating the Cluster</h3>
+
+<p>
+    We will use the Google Cloud Console to create a new Kubernetes cluster on GKE. Go to the Google Cloud Console, following the link below:
+</p>
+
+<p>
+    <a href="https://console.cloud.google.com/kubernetes">Google Cloud Console</a>
+</p>
+
+<p>
+    You need a Google Cloud Platform account to access the Google Cloud Console. If you don't have an account, you can sign up for a free trial.
+    You will need to provide billing information to create an account, but you will not be charged during the free trial period.
+</p>
+
+<p>
+    Once you are logged in to the Google Cloud Console, click on the <i>Navigation menu</i> icon in the top left corner, then select <i>Kubernetes Engine</i> 
+    from the menu.
+</p>
+
+<p>
+    Click on <i>Enable Kubernetes Engine API</i> if it is not already enabled. It may take several minutes until the API is enabled.
+</p>
+
+<p>
+    Click on the <i>Clusters</i> tab from the <i>Navigation menu > Kubernetes Engine</i>, then click on the <i>Create cluster</i> button to create a new cluster.
+</p>
+
+<p>
+    Google Cloud Console will present you with the <i>Create an Autopilot cluster</i> form.
+</p>
+
+<p>
+    Enter <i>blog-cluster-prod</i> as a name for the cluster and select a zone. Click <i>NEXT: FLEET REGISTRATION</i>.
+</p>
+
+<p>
+    Leave the default settings for the <i>Fleet registration</i> and click <i>NEXT: NETWORKING</i>.
+</p>
+
+<p>
+    Make sure, that the <i>Public cluster</i> option is selected and leave the default settings for the <i>Networking</i> and click <i>NEXT: ADVANCED SETTINGS</i>.
+</p>
+
+<p>
+    Leave the default settings for the <i>Advanced settings</i> and click <i>NEXT: REVIEW AND CREATE</i>.
+</p>
+
+<p>
+    Review the settings and click <i>Create</i> to create the cluster. It may take several minutes until the cluster is created.
+</p>
+
+<h3>Build a docker image from our Angular Frontend Application</h3>
+
+<p>
+    We will build a Docker image from our Angular frontend application and push it to Google Container Registry (GCR).
+</p>
+
+<p>
+    First, we need to build the Angular application. Open a terminal and navigate to the <i>blog-frontend</i> directory.
+</p>
+
+<p>
+    Run the following command to build the Angular application:
+</p>
+
+<pre>
+    <code>
+        ng build
+    </code>
+</pre>
+
+<p>
+    This command will build the Angular application and create a <i>dist/blog-frontend</i> directory with the compiled files.
+</p>
+
+<p>
+    Next, we need to create a Dockerfile to build the Docker image. Create a new file named <i>Dockerfile</i> in the <i>blog-frontend</i> 
+    directory with the following content:
+</p>
+
+<pre>
+    <code>
+        FROM nginx:alpine
+        COPY dist/blog-frontend /usr/share/nginx/html
+    </code>
+</pre>
+
+<p>
+    This Dockerfile uses the <i>nginx:alpine</i> base image and copies the compiled Angular application from the <i>dist/blog-frontend</i> directory 
+    to the <i>/usr/share/nginx/html</i> directory in the container.
+</p>
+
+<p>
+    As prerequisites, you need to have the Kubernetes Engine API and the Artifact Registry API activated.
+</p>
+
+<h4>Enable Google APIs</h4>
+
+<p>
+    Go to the Google Cloud Console and select <i>APIs & Services</i>. Under <i>APIs & Services</i> select <i>Library</i>.
+</p>
+
+<p>
+    Enter <i>Kubernetes Engine API</i></p> in the search field. Select the <i>Kubernetes Engine API</i> and click <i>Enable</i>. Do the same with the
+    Artifact Registry API.
+</p>
+
+<h4>Build your Docker Image</h4>
+
+<p>
+    To deploy our Angular frontend, we need to build a Docker image from our Angular application within the Google Cloud Shell. We assume, 
+    that the Angular application's repository is hosted on GitHub. Make sure, that the repository is up do date and that the Dockerfile is 
+    present in the main branch.
+</p>
+
+<p>
+    Switch to the Google Cloud Shell. You can find the Google Cloud Shell in the top right corner of the Google Cloud Console.
+</p>
+
+<p>
+    Clone the Angular application's repository to the Google Cloud Shell:
+</p>
+
+<pre>
+    <code>
+        git clone https://github.com/[GITHUB_USERNAME]/[REPOSITORY_NAME].git
+    </code>
+</pre>
+
+<p>
+    Replace <i>[GITHUB_USERNAME]</i> with your GitHub username and <i>[REPOSITORY_NAME]</i> with the name of the repository. Also take into
+    account, that the repository must be public.
+</p>
+
+<p>
+    Change to the Angular application's directory:
+</p>
+
+<pre>
+    <code>
+        cd [REPOSITORY_NAME]
+    </code>
+</pre>
+
+<p>
+    Build the Docker image from the Angular application:
+</p>
+
+<p>
+    We need the Project ID of the Google Cloud Platform project to push the Docker image to Google Container Registry (GCR). Run the following command to get the Project ID:
+</p>
+
+<pre>
+    <code>
+        gcloud config get-value project
+    </code>
+</pre>
+
+<p>
+    The command will output the Project ID. We will use this Project ID to tag the Docker image. Therefore we will store it in an environment variable:
+</p>
+
+<pre>
+    <code>
+        export PROJECT_ID=[PROJECT_ID]
+    </code>
+</pre>
+
+<p>
+    Replace <i>[PROJECT_ID]</i> with the Project ID you got from the previous command. You can check if the environment variable has been set 
+    correctly by running:
+</p>
+
+<pre>
+    <code>
+        echo $PROJECT_ID
+    </code>
+</pre>
+
+<p>
+    Now choose a region for the Artifact Registry. We will store the Docker image in the Artifact Registry. First get a list of available regions:
+</p>
+
+<pre>
+    <code>
+        gcloud artifacts locations list
+    </code>
+</pre>
+
+<p>
+    Choose a region from the list and set it as an environment variable:
+</p>
+
+<pre>
+    <code>
+        export REGION=us-central1
+    </code>
+</pre>
+
+<p>
+    Replace <i>us-central1</i> with the region you chose. Again, you can check if the environment variable has been set correctly by running:
+</p>
+
+<pre>
+    <code>
+        echo $REGION
+    </code>
+</pre>
+
+<p>
+    Now run the following command to create the Artifact Registry repository:
+</p>
+
+<pre>
+    <code>
+        gcloud artifacts repositories create blog-frontend-repo --repository-format=docker --location=$REGION --description="Docker repository"
+    </code>
+</pre>
+
+<p>
+    This command will create a new Artifact Registry repository named <i>blog-frontend-repo</i> in the specified region.
+</p>
+
+<p>
+    Enter the directory of the Angular application, where the Dockerfile is located:
+</p>
+
+<pre>
+    <code>
+        cd blog-frontend
+    </code>
+</pre>
+
+
+<pre>
+    <code>
+        docker build -t gcr.io/[PROJECT_ID]/blog-frontend:v1 .
+    </code>
+</pre>
+
+<p>
+    Replace <i>[PROJECT_ID]</i> with your Google Cloud Platform project ID. This command will build the Docker image with the tag 
+    <i>gcr.io/[PROJECT_ID]/blog-frontend:v1</i>.
+</p>
+
+<p>
+    You can find the project ID in the Google Cloud Console by clicking on the top left on the project ID's name. A popup will appear with the available
+    Projects in your account and their project IDs.
+</p>
+
+<p>
+    After the Docker image has been created, we need to push the image to Google Container Registry (GCR). Run the following command to push the 
+    Docker image:
+</p>
+
+<pre>
+    <code>
+        docker push gcr.io/[PROJECT_ID]/blog-frontend:v1
+    </code>
+</pre>
