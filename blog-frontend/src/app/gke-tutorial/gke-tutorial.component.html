@@ -122,7 +122,7 @@
     Artifact Registry API.
 </p>
 
-<h4>Build your Docker Image</h4>
+<h3>Build your Docker Image</h3>
 
 <p>
     To deploy our Angular frontend, we need to build a Docker image from our Angular application within the Google Cloud Shell. We assume, 
@@ -179,11 +179,6 @@
         npm run build
     </code>
 </pre>
-
-
-<p>
-    We can now build the Docker image from the Angular application:
-</p>
 
 <p>
     We need the Project ID of the Google Cloud Platform project to push the Docker image to Google Container Registry (GCR). Run the following command to get the Project ID:
@@ -260,17 +255,6 @@
     This command will create a new Artifact Registry repository named <i>blog-frontend-repo</i> in the specified region.
 </p>
 
-<p>
-    Enter the directory of the Angular application, where the Dockerfile is located:
-</p>
-
-<pre>
-    <code>
-        cd blog-frontend
-    </code>
-</pre>
-
-
 <pre>
     <code>
         docker build -t ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1 .
@@ -278,13 +262,73 @@
 </pre>
 
 <p>
-    After the Docker image has been created, we need to push the image to Google Container Registry (GCR). Run the following command to push the 
-    Docker image:
+    You can check if the Docker image has been created by running:
 </p>
 
 <pre>
     <code>
-        docker push gcr.io/[PROJECT_ID]/blog-frontend:v1
+        docker images
     </code>
 </pre>
 
+<p>
+    Next, enable the Artifact Registry API for the current google cloud project:
+</p>
+
+<pre>
+    <code>
+        gcloud services enable artifactregistry.googleapis.com
+    </code>
+</pre>
+
+<p>
+    Authenticate the Google Cloud Console to the Artifactory Registry:
+</p>
+
+<pre>
+    <code>
+        gcloud auth configure-docker ${REGION}-docker.pkg.dev
+    </code>
+</pre>
+
+<p>
+    Now,finally run the following command to push the Docker image to the Artifact Registry repository:
+</p>
+
+<pre>
+    <code>
+        docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1
+    </code>
+</pre>
+
+<h3>Deploy the Docker Image to Google Kubernetes Engine</h3>
+
+<p>
+    After pushing the Docker image to the Artifact Registry, you can deploy them in the Google Kubernetes Engine. Therefore,
+    open the Google Cloud Console and navigate to the Kubernetes Engine. Click on the <i>Workloads</i> tab and click <i>Create Deployment</i>.
+</p>
+
+<p>
+    In the next step, with <i>Existing container image</i> selected, click on Image Path <i>select</i>. From <i>Artifact Registry</i>, select the 
+    Docker image you pushed before. Click <i>Continue</i>.
+</p>
+
+<p>
+    In the Configuration panel enter <i>blog-frontend</i> as the name of the deployment and select the <i>blog-cluster-prod</i> in the Kubernetes 
+    cluster selection field. Click <i>Continue</i>.
+</p>
+
+<p>
+    In the <i>Expose</i> panel, select <i>Expose deployment as a new service</i>. Leave port1 as <i>80</i> and enter 8080 for target port 1. 
+    Click <i>Deploy</i>.
+</p>
+
+<p>
+    Because Autopilot recreates and deletes nodes during deployment, an error message may appear. This is normal and can be ignored. Wait a few minutes 
+    and push the refresh button, to check the status of the deployment. If you see a green checkmark, the deployment was successful.
+</p>
+
+<p>
+    Scroll down to the bottom of the workloads page to see the <i>Service</i> section. Click on the <i>External Endpoint</i> link to open the
+    Angular application in a new tab.
+</p>
