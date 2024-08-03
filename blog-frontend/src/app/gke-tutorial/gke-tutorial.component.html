@@ -257,7 +257,7 @@
 
 <pre>
     <code>
-        docker build -t ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1 .
+        {{"docker build -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1 ."}}
     </code>
 </pre>
 
@@ -287,7 +287,7 @@
 
 <pre>
     <code>
-        gcloud auth configure-docker ${{ '{REGION}' }}-docker.pkg.dev
+        {{"gcloud auth configure-docker ${REGION}-docker.pkg.dev"}}
     </code>
 </pre>
 
@@ -297,7 +297,7 @@
 
 <pre>
     <code>
-        docker push ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1
+       {{"docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1"}}
     </code>
 </pre>
 
