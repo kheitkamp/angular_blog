@@ -1,2 +1,2 @@
 FROM nginx:alpine
-COPY dist/blog-frontend /usr/share/nginx/html
+COPY dist/blog-frontend/browser /usr/share/nginx/html

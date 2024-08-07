@@ -20,7 +20,7 @@
 </p>
 
 <p>
-    <a href="https://console.cloud.google.com/kubernetes">Google Cloud Console</a>
+    <a href="https://console.cloud.google.com/kubernetes" target="_blank">Google Cloud Console</a>
 </p>
 
 <p>
@@ -34,11 +34,11 @@
 </p>
 
 <p>
-    Click on <i>Enable Kubernetes Engine API</i> if it is not already enabled. It may take several minutes until the API is enabled.
+    Click on <b>Enable Kubernetes Engine API</b> if it is not already enabled. It may take several minutes until the API is enabled.
 </p>
 
 <p>
-    Click on the <i>Clusters</i> tab from the <i>Navigation menu > Kubernetes Engine</i>, then click on the <i>Create cluster</i> button to create a new cluster.
+    Click on the <b>Clusters</b> tab from the <b>Navigation menu > Kubernetes Engine</b>, then click on the <b>Create cluster</b> button to create a new cluster.
 </p>
 
 <p>
@@ -46,24 +46,32 @@
 </p>
 
 <p>
-    Enter <i>blog-cluster-prod</i> as a name for the cluster and select a zone. Click <i>NEXT: FLEET REGISTRATION</i>.
+    Enter <b>blog-cluster-prod</b> as a name for the cluster and select a zone. Click <b>NEXT: FLEET REGISTRATION</b>.
 </p>
 
 <p>
-    Leave the default settings for the <i>Fleet registration</i> and click <i>NEXT: NETWORKING</i>.
+    Leave the default settings for the <i>Fleet registration</i> and click <b>NEXT: NETWORKING</b>.
 </p>
 
 <p>
-    Make sure, that the <i>Public cluster</i> option is selected and leave the default settings for the <i>Networking</i> and 
-    click <i>NEXT: ADVANCED SETTINGS</i>.
+    Make sure, that the <b>Public cluster</b> option is selected. This makes the cluster reachable from the public internet. 
+    By choosing <i>Private cluster</i>, you would set up an intranet like environment, making your website available from selected IP-adresses only.
+    Leave the default settings for the <i>Networking</i> and 
+    click <b>NEXT: ADVANCED SETTINGS</b>.
 </p>
 
 <p>
-    Leave the default settings for the <i>Advanced settings</i> and click <i>NEXT: REVIEW AND CREATE</i>.
+    Leave the default settings for the <i>Advanced settings</i> and click <b>NEXT: REVIEW AND CREATE</b>.
 </p>
 
 <p>
-    Review the settings and click <i>Create</i> to create the cluster. It may take several minutes until the cluster is created.
+    Review the settings and click <b>Create</b> to create the cluster. It may take several minutes until the cluster is created. You can 
+    monitor the progress in the <i>Clusters</i> tab. At the bottom of the <i>Clusters</i> page, you will find the cluster's status within 
+    the <i>Cluster status</i> section. The spinning wheel indicates that the cluster is being created. 
+</p>
+<p>
+    While the cluster is being created, you can proceed with building the Docker image from the Angular frontend application, which we 
+    will deploy to the cluster later.
 </p>
 
 <h3>Build a docker image from our Angular Frontend Application</h3>
@@ -98,13 +106,22 @@
 <pre>
     <code>
         FROM nginx:alpine
-        COPY dist/blog-frontend /usr/share/nginx/html
+        COPY dist/blog-frontend/browser /usr/share/nginx/html
     </code>
 </pre>
 
 <p>
-    This Dockerfile uses the <i>nginx:alpine</i> base image and copies the compiled Angular application from the <i>dist/blog-frontend</i> directory 
-    to the <i>/usr/share/nginx/html</i> directory in the container.
+    This Dockerfile uses the <i>nginx:alpine</i> base image and copies the compiled Angular application from the <b>dist/blog-frontend/browser</b> directory 
+    to the <i>/usr/share/nginx/html</i> directory in the container. 
+    NGINX is a web server that will serve our Angular application. The <i>nginx:alpine</i> image is a lightweight version of NGINX based on the
+    Alpine Linux distribution.
+    <b>/usr/share/nginx/html</b> is the default directory for serving static files in NGINX. You can find more 
+    information about the NGINX Docker image on the <a href="https://hub.docker.com/_/nginx" target="_blank">Docker Hub</a>.
+</p>
+<p>
+    NGINX is the industry standard for web servers and is used by many of the largest websites in the world. You will very often see, that NGINX is used
+    as a reverse proxy server, which can handle incoming requests and forward them to the appropriate backend server. Another main feature of NGINX is 
+    its ability to function as a load balancer, which can distribute incoming traffic across multiple servers.
 </p>
 
 <p>
@@ -257,7 +274,7 @@
 
 <pre>
     <code>
-        docker build -t ${{ '{REGION}' }}-docker.pkg.dev/${{ '{PROJECT_ID}' }}/blog-frontend-repo/blog-frontend:v1 .
+        {{"docker build -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1 ."}}
     </code>
 </pre>
 
@@ -287,7 +304,7 @@
 
 <pre>
     <code>
-        gcloud auth configure-docker ${REGION}-docker.pkg.dev
+        {{"gcloud auth configure-docker ${REGION}-docker.pkg.dev"}}
     </code>
 </pre>
 
@@ -297,7 +314,7 @@
 
 <pre>
     <code>
-        docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1
+       {{"docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/blog-frontend-repo/blog-frontend:v1"}}
     </code>
 </pre>
 
